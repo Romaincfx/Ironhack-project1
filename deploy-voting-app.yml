@@ -1,0 +1,63 @@
+---
+- name: Deploy Vote and Result frontend services
+  hosts: frontend
+  become: true
+  tasks:
+    - name: Install Docker and Docker Compose
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Copy frontend docker-compose file
+      copy:
+        src: frontend-compose.yml
+        dest: /home/ubuntu/docker-compose.yml
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+
+    - name: Start frontend containers
+      command: docker compose up -d
+      args:
+        chdir: /home/ubuntu/
+
+- name: Deploy Worker and Redis backend services
+  hosts: backend
+  become: true
+  tasks:
+    - name: Install Docker and Docker Compose
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Copy backend docker-compose file
+      copy:
+        src: backend-compose.yml
+        dest: /home/ubuntu/docker-compose.yml
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+
+    - name: Start backend containers
+      command: docker compose up -d
+      args:
+        chdir: /home/ubuntu/
+
+- name: Deploy PostgreSQL database service
+  hosts: database
+  become: true
+  tasks:
+    - name: Install Docker and Docker Compose
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Copy database docker-compose file
+      copy:
+        src: db-compose.yml
+        dest: /home/ubuntu/docker-compose.yml
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+
+    - name: Start database container
+      command: docker compose up -d
+      args:
+        chdir: /home/ubuntu/

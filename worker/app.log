@@ -1,0 +1,19 @@
+Database connection string: Server=localhost;Username=postgres;Password=postgres;Database=postgres
+Connected to db
+Found redis at 127.0.0.1
+Connecting to redis
+System.AggregateException: One or more errors occurred. (SocketFailure (ReadSocketError/ConnectionReset, last-recv: 5) on 127.0.0.1:6379/Interactive, Idle/Faulted, last: ECHO, origin: ReadFromPipe, outstanding: 1, last-read: 0s ago, last-write: 0s ago, unanswered-write: 0s ago, keep-alive: 60s, state: ConnectedEstablished, mgr: 8 of 10 available, in: 0, in-pipe: 0, out-pipe: 0, last-heartbeat: 0s ago, last-mbeat: 0s ago, global: 0s ago, v: 2.6.66.47313)
+ ---> StackExchange.Redis.RedisConnectionException: SocketFailure (ReadSocketError/ConnectionReset, last-recv: 5) on 127.0.0.1:6379/Interactive, Idle/Faulted, last: ECHO, origin: ReadFromPipe, outstanding: 1, last-read: 0s ago, last-write: 0s ago, unanswered-write: 0s ago, keep-alive: 60s, state: ConnectedEstablished, mgr: 8 of 10 available, in: 0, in-pipe: 0, out-pipe: 0, last-heartbeat: 0s ago, last-mbeat: 0s ago, global: 0s ago, v: 2.6.66.47313
+ ---> Pipelines.Sockets.Unofficial.ConnectionResetException: Connection reset by peer
+ ---> System.Net.Sockets.SocketException (54): Connection reset by peer
+   at Pipelines.Sockets.Unofficial.Internal.Throw.Socket(Int32 errorCode) in /_/src/Pipelines.Sockets.Unofficial/Internal/Throw.cs:line 59
+   at Pipelines.Sockets.Unofficial.SocketConnection.DoReceiveAsync() in /_/src/Pipelines.Sockets.Unofficial/SocketConnection.Receive.cs:line 64
+   --- End of inner exception stack trace ---
+   at System.IO.Pipelines.PipeCompletion.ThrowLatchedException()
+   at System.IO.Pipelines.Pipe.GetReadAsyncResult()
+   at StackExchange.Redis.PhysicalConnection.ReadFromPipe()
+   --- End of inner exception stack trace ---
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task.ThrowIfExceptional(Boolean includeTaskCanceledExceptions)
+   at System.Threading.Tasks.Task`1.get_Result()
+   at Worker.Program.Main(String[] args) in /Users/rconfavreux/Desktop/Ironhack/ironhack-project-1/worker/Program.cs:line 55

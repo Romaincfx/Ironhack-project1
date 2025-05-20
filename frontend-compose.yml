@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  vote:
+    image: ghenac/voting-app:vote
+    ports:
+      - "8080:80"
+    environment:
+      REDIS_HOST: "<PRIVATE_IP_OF_Backend_EC2>"
+    restart: always
+
+  result:
+    image: ghenac/voting-app:result
+    ports:
+      - "8081:80"
+    environment:
+      DB_HOST: "<PRIVATE_IP_OF_DB_EC2>"
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
+    restart: always

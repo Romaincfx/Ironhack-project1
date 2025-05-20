@@ -1,0 +1,12 @@
+41976:C 17 May 2025 16:55:04.627 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+41976:C 17 May 2025 16:55:04.627 * Redis version=8.0.1, bits=64, commit=00000000, modified=1, pid=41976, just started
+41976:C 17 May 2025 16:55:04.627 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+41976:M 17 May 2025 16:55:04.628 * monotonic clock: POSIX clock_gettime
+41976:M 17 May 2025 16:55:04.628 * Running mode=standalone, port=6379.
+41976:M 17 May 2025 16:55:04.629 * Server initialized
+41976:M 17 May 2025 16:55:04.629 * Ready to accept connections tcp
+41976:signal-handler (1747493994) Received SIGTERM scheduling shutdown...
+41976:M 17 May 2025 16:59:55.025 * User requested shutdown...
+41976:M 17 May 2025 16:59:55.025 * Saving the final RDB snapshot before exiting.
+41976:M 17 May 2025 16:59:55.047 * DB saved on disk
+41976:M 17 May 2025 16:59:55.047 # Redis is now ready to exit, bye bye...
