@@ -1,0 +1,121 @@
+---
+- name: Setup Frontend Instance
+  hosts: frontend
+  become: yes
+  tasks:
+    - name: Install Docker
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Create Docker network
+      community.docker.docker_network:
+        name: app_net
+        driver: bridge
+        ipam_config:
+          - subnet=172.25.0.0/16
+
+    - name: Run voting-app container
+      community.docker.docker_container:
+        name: voting-app
+        image: romainconfavreux/voting-app
+        state: started
+        restart_policy: always
+        ports:
+          - "80:80"
+        networks:
+          - name: app_net
+        env:
+          REDIS_HOST: "{{ hostvars['backend-instance']['ansible_host'] }}"
+
+    - name: Run result-app container
+      community.docker.docker_container:
+        name: result-app
+        image: romainconfavreux/result
+        state: started
+        restart_policy: always
+        ports:
+          - "5001:80"
+        networks:
+          - name: app_net
+        env:
+          DB_HOST: "{{ hostvars['database-instance']['ansible_host'] }}"
+          DB_NAME: votes
+          DB_USER: vote_admin
+          DB_PASS: securepassword
+
+- name: Setup Backend Instance
+  hosts: backend
+  become: yes
+  tasks:
+    - name: Install Docker
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Install Redis
+      ansible.builtin.apt:
+        name: redis-server
+        state: present
+
+    - name: Start Redis
+      ansible.builtin.service:
+        name: redis-server
+        state: started
+        enabled: true
+
+    - name: Create Docker network
+      community.docker.docker_network:
+        name: app_net
+        driver: bridge
+        ipam_config:
+          - subnet=172.25.0.0/16
+
+    - name: Run worker-app container
+      community.docker.docker_container:
+        name: worker-app
+        image: romainconfavreux/worker-app
+        state: started
+        restart_policy: always
+        networks:
+          - name: app_net
+        env:
+          REDIS_HOST: localhost
+          DB_HOST: "{{ hostvars['database-instance']['ansible_host'] }}"
+          DB_NAME: votes
+          DB_USER: vote_admin
+          DB_PASS: securepassword
+
+- name: Setup Database Instance
+  hosts: database
+  become: yes
+  tasks:
+    - name: Install Docker
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Create Docker network
+      community.docker.docker_network:
+        name: app_net
+        driver: bridge
+        ipam_config:
+          - subnet=172.25.0.0/16
+
+    - name: Run PostgreSQL container
+      community.docker.docker_container:
+        name: postgres-db
+        image: postgres:14
+        state: started
+        restart_policy: always
+        ports:
+          - "5432:5432"
+        networks:
+          - name: app_net
+        env:
+          POSTGRES_DB: votes
+          POSTGRES_USER: vote_admin
+          POSTGRES_PASSWORD: securepassword

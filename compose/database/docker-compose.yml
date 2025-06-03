@@ -1,14 +1,15 @@
-# db-compose.yml
-version: "3.9"
+version: '3.8'
 services:
   db:
     image: postgres:15-alpine
     environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: votes
+    ports:
+      - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
-    restart: always
 
 volumes:
   db-data:

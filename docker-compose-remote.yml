@@ -1,0 +1,50 @@
+services:
+  redis:
+    image: redis:alpine
+    restart: always
+
+  worker:
+    image: romainconfavreux/worker-app
+    environment:
+      REDIS_HOST: "backend" # Changed to service name
+      DB_HOST: "database"       # Changed to service name
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
+    depends_on:
+      - redis
+      - db
+    restart: always
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    restart: always
+
+  vote:
+    image: romainconfavreux/voting-app
+    ports:
+      - "8080:80"
+    environment:
+      REDIS_HOST: "frontend"  # Changed to service name
+    depends_on:
+      - redis
+    restart: always
+
+  result:
+    image: romainconfavreux/result:latest
+    ports:
+      - "8081:80"
+    environment:
+      DB_HOST: "database"      # Changed to service name
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
+    depends_on:
+      - db
+    restart: always
+
+volumes:
+  db-data:

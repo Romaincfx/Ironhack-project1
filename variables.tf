@@ -3,13 +3,19 @@
 variable "aws_region" {
   description = "AWS region to deploy to"
   type        = string
-  default     = "us-east-1"
+  default     = "us-west-1"
 }
 
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string
   default     = "10.0.0.0/16"
+}
+
+variable "vpc_id" {
+  description = "The ID of the VPC where resources will be deployed"
+  type        = string
+  default     = "vpc-01451be1500c3dc4d"
 }
 
 variable "public_subnets" {
@@ -21,13 +27,13 @@ variable "public_subnets" {
 variable "private_subnets" {
   description = "List of private subnet CIDRs"
   type        = list(string)
-  default     = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
+  default     = ["10.0.11.0/24"]
 }
 
 variable "azs" {
   description = "List of availability zones"
   type        = list(string)
-  default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
+  default     = ["us-west-1a", "us-west-1c"]
 }
 
 variable "ami_id" {
@@ -71,4 +77,44 @@ variable "user_data_docker" {
     usermod -aG docker ec2-user
     systemctl enable docker
   EOF
+}
+
+variable "target_group_name" {
+  description = "Name of the target group"
+  type        = string
+  default     = "frontend-tg"
+}
+
+variable "target_group_port" {
+  description = "Port for the target group"
+  type        = number
+  default     = 80
+}
+
+variable "target_group_protocol" {
+  description = "Protocol for the target group"
+  type        = string
+  default     = "HTTP"
+}
+
+variable "target_group_health_check_path" {
+  description = "Path for the target group health check"
+  type        = string
+  default     = "/"
+}
+
+variable "target_group_health_check_protocol" {
+  description = "Protocol for the target group health check"
+  type        = string
+  default     = "HTTP"
+}
+
+variable "key_name" {
+  description = "Name of the key pair"
+  type        = string
+}
+
+variable "public_key_path" {
+  description = "Path to the public key"
+  type        = string
 }

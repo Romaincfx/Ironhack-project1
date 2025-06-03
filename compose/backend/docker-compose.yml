@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  worker:
+    image: romainconfavreux/worker-app
+    environment:
+      REDIS_HOST: "redis" # Changed to service name
+      DB_HOST: "db"       # Changed to service name
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
+    depends_on:
+      - redis
+    restart: always
+    networks:
+      - back-tier
+    extra_hosts:
+    - "db:10.0.11.108"
+    - "redis:10.0.11.145"
+
+  redis:
+    image: redis:alpine
+    command: ["redis-server", "--bind", "0.0.0.0", "--protected-mode", "no"]
+    container_name: redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+  
+
+networks:
+  back-tier:
+    driver: bridge
